@@ -1,6 +1,6 @@
 name: Otomatik Puanlama ve AI Hoca
 
-on: [pull_request] # Öğrenci Pull Request açınca çalışsın
+on: [push]
 
 permissions:
   contents: read
