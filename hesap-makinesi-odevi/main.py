@@ -1,3 +1,3 @@
 def topla(sayi1, sayi2):
-    # Kodu buraya yaz
-    return None
+    sonuc = sayi1 + sayi2
+    return sonuc
