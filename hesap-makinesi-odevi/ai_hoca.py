@@ -15,7 +15,7 @@ model = genai.GenerativeModel('gemini-1.5-flash') # Hızlı ve ücretsiz model
 
 # Öğrencinin kodunu oku
 try:
-    with open("main.py", "r", encoding="utf-8") as file:
+    with open("hesap-makinesi-odevi/main.py", "r", encoding="utf-8") as file:
         ogrenci_kodu = file.read()
 except FileNotFoundError:
     print("Kod dosyası bulunamadı.")
