@@ -1,3 +1,3 @@
-def topla(sayi1, sayi2):
-    sonuc = sayi1 * sayi2
-    return sonuc
+def topla(a, b):
+    x = a * b
+    return x
