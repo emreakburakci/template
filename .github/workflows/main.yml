@@ -1,9 +1,13 @@
-name: Otomatik Puanlama Robotu
+name: Otomatik Puanlama ve AI Hoca
 
-on: [push] # Biri kod gönderdiği (push) an çalış.
+on: [pull_request] # Öğrenci Pull Request açınca çalışsın
+
+permissions:
+  contents: read
+  pull-requests: write # Yorum yazabilmesi için izin
 
 jobs:
-  build:
+  review:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,10 +18,28 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Test Aracını Yükle
+    - name: Kütüphaneleri Yükle
       run: |
-        pip install pytest
+        pip install pytest google-generativeai
 
+    # 1. Aşama: Mekanik Test (Kapı Bekçisi)
     - name: Testleri Çalıştır
+      id: test_step
       run: |
         pytest hesap-makinesi-odevi/test_main.py
+
+    # 2. Aşama: AI Hoca (Sadece test geçerse çalışır)
+    - name: AI Kod İncelemesi Yap
+      if: success() # Test başarılıysa çalış
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      run: |
+        python hesap-makinesi-odevi/ai_hoca.py > ai_feedback.txt
+      
+    # 3. Aşama: Yorumu GitHub'a Yapıştır
+    - name: Yorum Olarak Ekle
+      if: success()
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        filePath: ai_feedback.txt
+        comment_tag: ai_review
