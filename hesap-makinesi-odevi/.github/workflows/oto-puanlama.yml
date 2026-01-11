@@ -1,0 +1,23 @@
+name: Otomatik Puanlama Robotu
+
+on: [push] # Biri kod gönderdiği (push) an çalış.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Python Kurulumu
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Test Aracını Yükle
+      run: |
+        pip install pytest
+
+    - name: Testleri Çalıştır
+      run: |
+        pytest test_main.py
