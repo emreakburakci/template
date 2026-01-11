@@ -11,7 +11,7 @@ if not api_key:
 
 # Gemini Ayarları
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash') # Hızlı ve ücretsiz model
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 # Öğrencinin kodunu oku
 try:
