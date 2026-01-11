@@ -1,20 +1,19 @@
-name: Otomatik Puanlama ve AI Hoca
+name: Otomatik Puanlama ve AI Hoca (Push Modu)
 
-on: [push]
+on: [push] # ARTIK HER PUSH İŞLEMİNDE ÇALIŞACAK
 
 permissions:
-  contents: read
-  pull-requests: write # Yorum yazabilmesi için izin
+  contents: write # Commit'e yorum yazabilmesi için yazma izni lazım
 
 jobs:
   review:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Python Kurulumu
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
@@ -23,6 +22,7 @@ jobs:
         pip install pytest google-generativeai
 
     # 1. Aşama: Mekanik Test (Kapı Bekçisi)
+    # Test başarısız olursa süreç burada durur, öğrenci Kırmızı Çarpı görür.
     - name: Testleri Çalıştır
       id: test_step
       run: |
@@ -30,16 +30,16 @@ jobs:
 
     # 2. Aşama: AI Hoca (Sadece test geçerse çalışır)
     - name: AI Kod İncelemesi Yap
-      if: success() # Test başarılıysa çalış
+      if: success() 
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       run: |
         python hesap-makinesi-odevi/ai_hoca.py > ai_feedback.txt
       
-    # 3. Aşama: Yorumu GitHub'a Yapıştır
-    - name: Yorum Olarak Ekle
+    # 3. Aşama: Yorumu COMMIT'e Yapıştır
+    # PR olmadığı için direkt commit altına yorum atıyoruz.
+    - name: Commit'e Yorum Yap
       if: success()
-      uses: thollander/actions-comment-pull-request@v2
+      uses: peter-evans/commit-comment@v3
       with:
-        filePath: ai_feedback.txt
-        comment_tag: ai_review
+        body-path: ai_feedback.txt
