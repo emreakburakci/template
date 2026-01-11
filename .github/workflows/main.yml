@@ -20,4 +20,4 @@ jobs:
 
     - name: Testleri Çalıştır
       run: |
-        pytest test_main.py
+        pytest hesap-makinesi-odevi/test_main.py
